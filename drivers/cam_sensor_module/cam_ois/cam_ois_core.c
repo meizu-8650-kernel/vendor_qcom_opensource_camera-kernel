@@ -15,6 +15,7 @@
 #include "cam_res_mgr_api.h"
 #include "cam_common_util.h"
 #include "cam_packet_util.h"
+#include "meizu_ois_compat.h"
 
 #define CAM_OIS_FW_VERSION_CHECK_MASK 0x1
 
@@ -186,13 +187,16 @@ static int cam_ois_power_up(struct cam_ois_ctrl_t *o_ctrl)
 		return rc;
 	}
 
+	if (meizu_ois_needs_power_delay(o_ctrl))
+		usleep_range(10000, 10100);
+
 	rc = camera_io_init(&o_ctrl->io_master_info);
 	if (rc) {
 		CAM_ERR(CAM_OIS, "cci_init failed: rc: %d", rc);
 		goto cci_failure;
 	}
 
-	return rc;
+	return 0;
 cci_failure:
 	if (cam_sensor_util_power_down(power_info, soc_info))
 		CAM_ERR(CAM_OIS, "Power Down failed");

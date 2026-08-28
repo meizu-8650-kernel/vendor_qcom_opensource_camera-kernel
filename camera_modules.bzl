@@ -214,6 +214,7 @@ def _define_module(target, variant, lunch_target=None):
                     "drivers/cam_sensor_module/cam_eeprom/cam_eeprom_soc.c",
                     "drivers/cam_sensor_module/cam_ois/cam_ois_dev.c",
                     "drivers/cam_sensor_module/cam_ois/cam_ois_core.c",
+                    "drivers/cam_sensor_module/cam_ois/meizu_ois_compat.c",
                     "drivers/cam_sensor_module/cam_ois/cam_ois_soc.c",
                     "drivers/cam_sensor_module/cam_sensor/cam_sensor_dev.c",
                     "drivers/cam_sensor_module/cam_sensor/cam_sensor_core.c",

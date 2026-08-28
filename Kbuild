@@ -259,6 +259,7 @@ camera-$(CONFIG_SPECTRA_SENSOR) += \
 	drivers/cam_sensor_module/cam_eeprom/cam_eeprom_soc.o \
 	drivers/cam_sensor_module/cam_ois/cam_ois_dev.o \
 	drivers/cam_sensor_module/cam_ois/cam_ois_core.o \
+	drivers/cam_sensor_module/cam_ois/meizu_ois_compat.o \
 	drivers/cam_sensor_module/cam_ois/cam_ois_soc.o \
 	drivers/cam_sensor_module/cam_sensor/cam_sensor_dev.o \
 	drivers/cam_sensor_module/cam_sensor/cam_sensor_core.o \
