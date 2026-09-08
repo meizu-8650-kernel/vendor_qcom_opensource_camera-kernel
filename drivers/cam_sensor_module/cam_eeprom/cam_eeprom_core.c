@@ -13,6 +13,7 @@
 #include "cam_debug_util.h"
 #include "cam_common_util.h"
 #include "cam_packet_util.h"
+#include "meizu_eeprom_compat.h"
 
 #define MAX_READ_SIZE  0x7FFFF
 
@@ -39,6 +40,15 @@ static int cam_eeprom_read_memory(struct cam_eeprom_ctrl_t *e_ctrl,
 		CAM_ERR(CAM_EEPROM, "e_ctrl is NULL");
 		return -EINVAL;
 	}
+
+	rc = meizu_eeprom_read_cached_memory(e_ctrl, block);
+	if (!rc) {
+		CAM_INFO(CAM_EEPROM, "Using calibration cache index %u size %u",
+			 e_ctrl->soc_info.index, block->num_data);
+		return 0;
+	}
+	CAM_DBG(CAM_EEPROM, "EEPROM cache unavailable rc %d", rc);
+	rc = 0;
 
 	eb_info = (struct cam_eeprom_soc_private *)e_ctrl->soc_info.soc_private;
 
