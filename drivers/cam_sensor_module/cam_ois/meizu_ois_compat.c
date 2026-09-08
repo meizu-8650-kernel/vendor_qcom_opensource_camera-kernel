@@ -45,3 +45,12 @@ bool meizu_ois_needs_power_delay(struct cam_ois_ctrl_t *o_ctrl)
 	return !strcmp(o_ctrl->ois_name, "M2481_rumba_ov50h40") ||
 		meizu_ois_dt_name_is(o_ctrl, "cam-name", "OV50H40-ois");
 }
+
+bool meizu_ois_needs_byte_swapped_time(struct cam_ois_ctrl_t *o_ctrl)
+{
+	if (!meizu_ois_cci_is(o_ctrl, 2, 0x72, MASTER_1))
+		return false;
+
+	return !strcmp(o_ctrl->ois_name, "M2481_dw9784_imx754") ||
+		meizu_ois_dt_name_is(o_ctrl, "ois-name", "754-2ois");
+}

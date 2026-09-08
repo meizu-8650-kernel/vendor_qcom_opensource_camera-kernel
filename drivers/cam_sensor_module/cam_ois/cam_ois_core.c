@@ -245,8 +245,9 @@ static int cam_ois_power_down(struct cam_ois_ctrl_t *o_ctrl)
 	return rc;
 }
 
-static int cam_ois_update_time(struct i2c_settings_array *i2c_set,
-	enum cam_endianness_type endianness)
+static int cam_ois_update_time(struct cam_ois_ctrl_t *o_ctrl,
+			       struct i2c_settings_array *i2c_set,
+			       enum cam_endianness_type endianness)
 {
 	struct i2c_settings_list *i2c_list;
 	int32_t rc = 0;
@@ -267,7 +268,10 @@ static int cam_ois_update_time(struct i2c_settings_array *i2c_set,
 		return rc;
 	}
 
-	if (endianness == CAM_ENDIANNESS_BIG)
+	if (meizu_ois_needs_byte_swapped_time(o_ctrl))
+		qtime_ns = swap_high_byte_and_low_byte((uint8_t *)&qtime_ns,
+						       sizeof(qtime_ns));
+	else if (endianness == CAM_ENDIANNESS_BIG)
 		qtime_ns = swap_high_word_and_low_word((uint16_t *)(&qtime_ns),
 					sizeof(qtime_ns) / sizeof(uint16_t));
 
@@ -1527,6 +1531,8 @@ static int cam_ois_pkt_parse(struct cam_ois_ctrl_t *o_ctrl, void *arg)
 		break;
 	}
 	case CAM_OIS_PACKET_OPCODE_WRITE_TIME: {
+		u8 ois_endianness = CAM_ENDIANNESS_LITTLE;
+
 		CAM_DBG(CAM_OIS,
 				"CAM_OIS_PACKET_OPCODE_WRITE_TIME");
 		if (o_ctrl->cam_ois_state < CAM_OIS_CONFIG) {
@@ -1550,12 +1556,10 @@ static int cam_ois_pkt_parse(struct cam_ois_ctrl_t *o_ctrl, void *arg)
 			goto end;
 		}
 
-		if (o_ctrl->fw_info.fw_count > 0) {
-			uint8_t ois_endianness =
+		if (o_ctrl->fw_info.fw_count > 0)
+			ois_endianness =
 				(o_ctrl->fw_info.endianness & OIS_ENDIANNESS_MASK_INPUTPARAM) >> 4;
-			rc = cam_ois_update_time(i2c_reg_settings, ois_endianness);
-		} else
-			rc = cam_ois_update_time(i2c_reg_settings, CAM_ENDIANNESS_LITTLE);
+		rc = cam_ois_update_time(o_ctrl, i2c_reg_settings, ois_endianness);
 		if (rc < 0) {
 			CAM_ERR(CAM_OIS, "Cannot update time");
 			goto end;

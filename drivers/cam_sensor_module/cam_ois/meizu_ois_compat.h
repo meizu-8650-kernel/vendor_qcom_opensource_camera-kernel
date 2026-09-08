@@ -6,5 +6,6 @@
 struct cam_ois_ctrl_t;
 
 bool meizu_ois_needs_power_delay(struct cam_ois_ctrl_t *o_ctrl);
+bool meizu_ois_needs_byte_swapped_time(struct cam_ois_ctrl_t *o_ctrl);
 
 #endif /* _MEIZU_OIS_COMPAT_H_ */
