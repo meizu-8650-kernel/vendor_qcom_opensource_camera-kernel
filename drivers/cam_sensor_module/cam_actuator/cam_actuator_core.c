@@ -11,6 +11,7 @@
 #include "cam_trace.h"
 #include "cam_common_util.h"
 #include "cam_packet_util.h"
+#include "meizu_actuator_compat.h"
 
 int32_t cam_actuator_construct_default_power_setting(
 	struct cam_sensor_power_ctrl_t *power_info)
@@ -252,6 +253,9 @@ int32_t cam_actuator_apply_settings(struct cam_actuator_ctrl_t *a_ctrl,
 	struct i2c_settings_array *i2c_set)
 {
 	struct i2c_settings_list *i2c_list;
+	struct i2c_settings_list *settings;
+	struct i2c_settings_list compat_settings;
+	struct cam_sensor_i2c_reg_array compat_reg;
 	int32_t rc = 0;
 
 	if (a_ctrl == NULL || i2c_set == NULL) {
@@ -266,9 +270,14 @@ int32_t cam_actuator_apply_settings(struct cam_actuator_ctrl_t *a_ctrl,
 
 	list_for_each_entry(i2c_list,
 		&(i2c_set->list_head), list) {
+		settings = i2c_list;
+		if (meizu_actuator_prepare_settings(a_ctrl, i2c_list,
+						    &compat_settings,
+						    &compat_reg))
+			settings = &compat_settings;
 		rc = cam_actuator_i2c_modes_util(
 			&(a_ctrl->io_master_info),
-			i2c_list);
+			settings);
 		if (rc < 0) {
 			CAM_ERR(CAM_ACTUATOR,
 				"Failed to apply settings: %d",

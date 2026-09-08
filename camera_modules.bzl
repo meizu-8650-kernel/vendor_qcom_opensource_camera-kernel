@@ -194,6 +194,7 @@ def _define_module(target, variant, lunch_target=None):
                 True: [
                     "drivers/cam_sensor_module/cam_actuator/cam_actuator_dev.c",
                     "drivers/cam_sensor_module/cam_actuator/cam_actuator_core.c",
+                    "drivers/cam_sensor_module/cam_actuator/meizu_actuator_compat.c",
                     "drivers/cam_sensor_module/cam_actuator/cam_actuator_soc.c",
                     "drivers/cam_sensor_module/cam_cci/cam_cci_dev.c",
                     "drivers/cam_sensor_module/cam_cci/cam_cci_core.c",

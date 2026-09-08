@@ -239,6 +239,7 @@ camera-$(CONFIG_SPECTRA_LRME) += \
 camera-$(CONFIG_SPECTRA_SENSOR) += \
 	drivers/cam_sensor_module/cam_actuator/cam_actuator_dev.o \
 	drivers/cam_sensor_module/cam_actuator/cam_actuator_core.o \
+	drivers/cam_sensor_module/cam_actuator/meizu_actuator_compat.o \
 	drivers/cam_sensor_module/cam_actuator/cam_actuator_soc.o \
 	drivers/cam_sensor_module/cam_cci/cam_cci_dev.o \
 	drivers/cam_sensor_module/cam_cci/cam_cci_core.o \
